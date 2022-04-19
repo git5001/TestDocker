@@ -11,6 +11,18 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  - name: Checkout 
+    uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
+   
+  - name: Docker 1
+    uses: addnab/docker-run-action@v3
+    with:
+      image: lyxhub/manylinux2014_x86_64_qt
+      options: -v ${{ github.workspace }}:/io
+      run: |
+        echo "Running Script build-wheels"
+        /io/Pyside-QCP/build-wheels.sh  
+
   vm:
     runs-on: ubuntu-latest
     steps:
@@ -21,8 +33,10 @@ jobs:
   container:
     runs-on: ubuntu-latest
     container: lyxhub/manylinux2014_x86_64_qt
+    options: -v ${{ github.workspace }}:/io
     steps:
       - run: |
           echo This job does specify a container.
           echo It runs in the container instead of the VM.
+          /io/Pyside-QCP/build-wheels.sh  
         name: Run in container
