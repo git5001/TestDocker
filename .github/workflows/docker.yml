@@ -18,6 +18,7 @@ jobs:
       uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
    
     - name: Docker 1
+      if: ${{ false }}
       uses: addnab/docker-run-action@v3
       with:
         image: lyxhub/manylinux2014_x86_64_qt
@@ -29,18 +30,23 @@ jobs:
   vm:
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Run on VM
+        run: |
           echo This job does not specify a container.
           echo It runs directly on the virtual machine.
-        name: Run on VM
-  container:
-    runs-on: ubuntu-latest
-    container: 
-      image: lyxhub/manylinux2014_x86_64_qt
-      options: -v ${{ github.workspace }}:/io
-    steps:
-      - run: |
-          echo This job does specify a container.
-          echo It runs in the container instead of the VM.
-          /io/Pyside-QCP/build-wheels.sh  
-        name: Run in container
+          echo ${{ github.workspace }}
+          ls -l ${{ github.workspace }}
+        
+        
+#  container:
+#    runs-on: ubuntu-latest
+#    container: 
+#      image: lyxhub/manylinux2014_x86_64_qt
+#      options: -v ${{ github.workspace }}:/io
+#    steps:
+#      - name: Run in container
+#        if: ${{ false }}
+#        run: |
+#          echo This job does specify a container.
+#          echo It runs in the container instead of the VM.
+#          /io/Pyside-QCP/build-wheels.sh  
